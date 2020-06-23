@@ -52,3 +52,29 @@ print(print(1), print(2))
 # return None, non-pure, side-effect, careful when in nested expression
 two = print(2)
 print(two)
+
+"""
+-2
+square of 256: 16.0
+100 * pi: 314.1592653589793
+14 + 28: 42
+100 - 7 * (8 + 4) =  16
+<built-in function max>
+<built-in function max>
+4
+2
+5
+3
+area: 314.1592653589793
+circumference: 62.83185307179586
+x: 4.5
+y: 3
+2^(1+10) - 2^5 = 2016
+absolute value of -2: 2
+1
+2
+None None
+2
+None
+
+"""
