@@ -105,7 +105,7 @@ def compose1(func1, func2):
     return f
 
 
-def make_repeater(func, n):
+def make_repeater(h, n):
     """Return the function that computes the nth application of func.
 
     >>> add_three = make_repeater(increment, 3)
@@ -120,15 +120,18 @@ def make_repeater(func, n):
     >>> make_repeater(square, 0)(5) # Yes, it makes sense to apply the function zero times! 
     5
     """
-    if n == 0:
-        return identity
-    k = 0
-    while k < n:
-        func = compose1(func, func)
-        k = k + 1
-    return func
+    '''m = identity
+        while (n > 0):
+            m = compose1(h,m)
+            n -= 1
+        return m'''
+
+    return accumulate(compose1, identity, n, lambda k: h)
 
 
+##########################
+# Just for fun Questions #
+##########################
 def zero(f):
     return lambda x: x
 
@@ -140,11 +143,13 @@ def successor(n):
 def one(f):
     """Church numeral 1: same as successor(zero)"""
     "*** YOUR CODE HERE ***"
+    return lambda x: f(x)
 
 
 def two(f):
     """Church numeral 2: same as successor(successor(zero))"""
     "*** YOUR CODE HERE ***"
+    return lambda x: f(f(x))
 
 
 three = successor(two)
@@ -163,6 +168,7 @@ def church_to_int(n):
     3
     """
     "*** YOUR CODE HERE ***"
+    return n(lambda x: x + 1)(0)
 
 
 def add_church(m, n):
@@ -172,6 +178,7 @@ def add_church(m, n):
     5
     """
     "*** YOUR CODE HERE ***"
+    return lambda f: lambda x: m(f)(n(f)(x))
 
 
 def mul_church(m, n):
@@ -184,6 +191,7 @@ def mul_church(m, n):
     12
     """
     "*** YOUR CODE HERE ***"
+    return lambda f: m(n(f))
 
 
 def pow_church(m, n):
@@ -195,3 +203,4 @@ def pow_church(m, n):
     9
     """
     "*** YOUR CODE HERE ***"
+    return lambda f: lambda x: n(m)(f)(x)
