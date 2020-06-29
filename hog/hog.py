@@ -43,6 +43,8 @@ def free_bacon(score):
     assert score < 100, 'The game should be over.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    assert score >= 0, 'The score should not be negative.'
+    return 10 - score % 10 + score // 10
     # END PROBLEM 2
 
 
@@ -61,6 +63,9 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    return roll_dice(num_rolls, dice)
     # END PROBLEM 3
 
 
@@ -70,6 +75,8 @@ def is_swap(player_score, opponent_score):
     """
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    diff = abs(player_score % 10 - opponent_score % 10)
+    return diff == opponent_score // 10 % 10
     # END PROBLEM 4
 
 
@@ -110,6 +117,18 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    while other(0) < goal or other(1) < goal:
+        if strategy0 == 0:
+            score0 = free_bacon(score1)
+        score0 = score0 + take_turn(strategy0, score1, dice)
+        if is_swap(score0, score1):
+            score0, score1 = score1, score0
+        score1 = score1 + take_turn(strategy1, score0, dice)
+    if score0 > score1:
+        return score0, score1
+    else:
+        return score1, score0
+
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
