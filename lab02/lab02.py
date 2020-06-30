@@ -154,6 +154,13 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
+    temp1 = compose1(f, g)
+    temp2 = compose1(g, f)
+
+    def identity(x):
+        return temp1(x) == temp2(x)
+
+    return identity
 
 
 def cycle(f1, f2, f3):
@@ -183,3 +190,20 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+
+    def ret_fn(n):
+        def a(x):
+            i = 0
+            while i < n:
+                if i % 3 == 0:
+                    x = f1(x)
+                elif i % 3 == 1:
+                    x = f2(x)
+                elif i % 3 == 2:
+                    x = f3(x)
+                i += 1
+            return x
+
+        return a
+
+    return ret_fn
