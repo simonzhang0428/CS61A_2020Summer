@@ -291,6 +291,17 @@ s = lambda x: x * x
 print('12 * 12 =', s(12))
 
 
+# example for lambda high order functions
+def make_adder(x):
+    def adder(y):
+        return x + y
+    return adder
+
+def make_adder2(x):
+    return lambda y: x + y
+
+make_adder = lambda x: lambda y: x + y
+
 # Some of the "rights and privileges" of first-class elements are:
 #
 # They may be bound to names.
@@ -319,3 +330,19 @@ print(triple(23))
 ->  <function triple at 0x1081adee0> ( 23 )
 69
 """
+
+
+# Think of this:
+#
+# print(x + 2)
+# print(y + 2)
+# print(z + 2)
+# As opposed to this:
+#
+# print(adder(x))
+# print(adder(y))
+# print(adder(z))
+
+# Less repetition! We don't have to add 2 every time anymore, because we have a function that does it for us. For
+# that matter, this could be any number, not just 2! Here's the thing about currying: it's not for efficiency.
+# Currying doesn't make your code any faster or slower, but it makes it more readable and organized.
