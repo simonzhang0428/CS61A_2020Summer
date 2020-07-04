@@ -346,3 +346,39 @@ print(triple(23))
 # Less repetition! We don't have to add 2 every time anymore, because we have a function that does it for us. For
 # that matter, this could be any number, not just 2! Here's the thing about currying: it's not for efficiency.
 # Currying doesn't make your code any faster or slower, but it makes it more readable and organized.
+
+# a funtion taht takes any argument and return a function that returns that argument
+def delay(arg):
+    print('delayed')
+    def g():
+        return arg
+    return g
+
+delay(delay)()(6)()
+print(delay(print)()(4))
+
+# function always returns the identity function
+def pirate(arggg):
+    print('matey')
+    def plunder(arggg):
+        return arggg
+    return plunder
+
+from operator import add, mul
+def square(x):
+    return mul(x, x)
+
+add(pirate(3)(square)(4), 1)
+# pirate(pirate(pirate))(5)(7)
+# matey
+# matey
+# Error
+
+def horse(mask):
+    horse = mask
+    def mask(horse):
+        return horse
+    return horse(mask)
+
+mask = lambda horse: horse(2)
+horse(mask)
