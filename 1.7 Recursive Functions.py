@@ -73,13 +73,13 @@ def fact(n):
 def is_even(n):
     if n == 0:
         return True
-    return is_odd(n-1)
+    return is_odd(n - 1)
 
 
 def is_odd(n):
     if n == 0:
         return False
-    return is_even(n-1)
+    return is_even(n - 1)
 
 
 # change mutually recursive into a single recursive function by breaking the abstraction boundary between the two
@@ -89,10 +89,10 @@ def is_even2(n):
     if n == 0:
         return True
     else:
-        if (n-1) == 0:
+        if (n - 1) == 0:
             return False
         else:
-            return is_even2((n-1)-1)
+            return is_even2((n - 1) - 1)
 
 
 def cascade(n):
@@ -111,15 +111,31 @@ def cascade(n):
         print(n)
     else:
         print(n)
-        cascade(n//10)
+        cascade(n // 10)
         print(n)
 
 
 def cascade2(n):
     print(n)
     if n >= 10:
-        cascade(n//10)
+        cascade(n // 10)
         print(n)
+
+
+def f_then_g(f, g, n):
+    if n:
+        f(n)
+        g(n)
+
+
+def inverse_cascade(n):
+    grow = lambda n: f_then_g(grow, print, n//10)
+    shrink = lambda n: f_then_g(print, shrink, n//10)
+    grow(n)
+    print(n)
+    shrink(n)
+
+inverse_cascade(2013)
 
 # As another example of mutual recursion, consider a two-player game in which there are n initial pebbles on a table.
 # The players take turns, removing either one or two pebbles from the table, and the player who removes the final
@@ -132,15 +148,16 @@ def play_alice(n):
     if n == 0:
         print('Bob wins!')
     else:
-        play_bob(n-1)
+        play_bob(n - 1)
+
 
 def play_bob(n):
     if n == 0:
         print('Alice wins!')
     elif is_even(n):
-        play_alice(n-2)
+        play_alice(n - 2)
     else:
-        play_alice(n-1)
+        play_alice(n - 1)
 
 
 play_alice(20)
@@ -152,7 +169,7 @@ def fib(n):
     if n == 2:
         return 1
     else:
-        return fib(n-1) + fib(n-2)
+        return fib(n - 1) + fib(n - 2)
 
 
 def count_partitions(n, m):
@@ -174,9 +191,7 @@ def count_partitions(n, m):
     elif m == 0:
         return 0
     else:
-        return count_partitions(n-m, m) + count_partitions(n, m-1)
-
-
+        return count_partitions(n - m, m) + count_partitions(n, m - 1)
 
 
 from doctest import testmod
