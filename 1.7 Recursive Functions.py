@@ -129,13 +129,15 @@ def f_then_g(f, g, n):
 
 
 def inverse_cascade(n):
-    grow = lambda n: f_then_g(grow, print, n//10)
-    shrink = lambda n: f_then_g(print, shrink, n//10)
+    grow = lambda n: f_then_g(grow, print, n // 10)
+    shrink = lambda n: f_then_g(print, shrink, n // 10)
     grow(n)
     print(n)
     shrink(n)
 
+
 inverse_cascade(2013)
+
 
 # As another example of mutual recursion, consider a two-player game in which there are n initial pebbles on a table.
 # The players take turns, removing either one or two pebbles from the table, and the player who removes the final
@@ -192,6 +194,46 @@ def count_partitions(n, m):
         return 0
     else:
         return count_partitions(n - m, m) + count_partitions(n, m - 1)
+
+
+def paths(m, n):
+    """Return the number of paths from one corner of an
+    M by N grid to the opposite corner.
+    >>> paths(2, 2)
+    2
+    >>> paths(5, 7)
+    210
+    >>> paths(117, 1)
+    1
+    >>> paths(1, 157)
+    1
+    """
+    assert type(m) == int and type(n) == int, 'input must be integer.'
+    assert m > 0 and n > 0, 'input must be positive'
+    if m == 1 or n == 1:
+        return 1
+    return paths(m - 1, n) + paths(m, n - 1)
+
+
+# paths(-1, 1)
+# paths(0.2, 5)
+
+# make use of template, make sure your time is almost always creative time
+# use simplest test to begin
+def remove(n, digit):
+    """Return all digits of non-negative N that are not DIGIT.
+    >>> remove(231, 2)
+    31
+    >>> remove(243132, 2)
+    4313
+    """
+    kept, digits = 0, 0
+    while n > 0:
+        n, last = n // 10, n % 10
+        if last != digit:
+            kept = kept + last * 10 ** digits
+            digits = digits + 1
+    return kept
 
 
 from doctest import testmod
