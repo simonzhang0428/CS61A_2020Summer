@@ -116,69 +116,73 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
-    # while score0 < goal and score1 < goal:
-    #     if strategy0(score0, score1) == 0:
-    #         score0 = score0 + free_bacon(score1)
-    #     else:
-    #         currScore0 = take_turn(strategy0(score0, score1), score1, dice)
-    #         score0 = score0 + currScore0
-    #     if is_swap(score0, score1):
-    #         score0, score1 = score1, score0
-    #
-    #     if score0 >= goal or score1 >= goal:
-    #         break
-    #     # other(who)
-    #     if strategy1(score1, score0) == 0:
-    #         score1 = score1 + free_bacon(score0)
-    #     else:
-    #         currScore1 = take_turn(strategy1(score1,score0), score0, dice)
-    #         score1 = score1 + currScore1
-    #     if is_swap(score1, score0):
-    #         score1, score0 = score0, score1
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
 
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
-    prevScore0, prevScore1, bonus = 0, 0, 0
+    # prevScore0, prevScore1, bonus = 0, 0, 0
+    # while score0 < goal and score1 < goal:
+    #     if strategy0(score0, score1) == 0:
+    #         currScore0 = free_bacon(score1)
+    #     else:
+    #         currScore0 = take_turn(strategy0(score0, score1), score1, dice)
+    #
+    #     if feral_hogs:
+    #         diff1 = strategy0(score0, score1) - prevScore0
+    #         if abs(diff1) == 2:
+    #             bonus = 3
+    #
+    #     score0 = score0 + currScore0 + bonus
+    #
+    #     if is_swap(score0, score1):
+    #         score0, score1 = score1, score0
+    #
+    #     bonus, prevScore0 = 0, currScore0
+    #
+    #     if score0 >= goal or score1 >= goal:
+    #         break
+    #     # other(who), change term
+    #     if strategy1(score1, score0) == 0:
+    #         currScore1 = free_bacon(score0)
+    #     else:
+    #         currScore1 = take_turn(strategy1(score1, score0), score0, dice)
+    #
+    #     if feral_hogs:
+    #         diff2 = strategy1(score1, score0) - prevScore1
+    #         if abs(diff2) == 2:
+    #             bonus = 3
+    #
+    #     score1 = score1 + currScore1 + bonus
+    #
+    #     if is_swap(score1, score0):
+    #         score1, score0 = score0, score1
+    #
+    #     bonus, prevScore1 = 0, currScore1
+    #
+    #     say = say(score0,score1)
+
+    prev_score0 = 0
+    prev_score1 = 0
     while score0 < goal and score1 < goal:
-        if strategy0(score0, score1) == 0:
-            currScore0 = free_bacon(score1)
+        if not who:
+            die0 = strategy0(score0, score1)
+            if feral_hogs and abs(die0 - prev_score0) == 2:
+                score0 += 3
+            prev_score0 = take_turn(die0, score1, dice)
+            score0 += prev_score0
+            if (is_swap(score0, score1)):
+                score0, score1 = score1, score0
         else:
-            currScore0 = take_turn(strategy0(score0, score1), score1, dice)
-
-        if feral_hogs:
-            diff1 = strategy0(score0, score1) - prevScore0
-            if abs(diff1) == 2:
-                bonus = 3
-
-        score0 = score0 + currScore0 + bonus
-
-        if is_swap(score0, score1):
-            score0, score1 = score1, score0
-
-        bonus, prevScore0 = 0, currScore0
-
-        if score0 >= goal or score1 >= goal:
-            break
-        # other(who), change term
-        if strategy1(score1, score0) == 0:
-            currScore1 = free_bacon(score0)
-        else:
-            currScore1 = take_turn(strategy1(score1, score0), score0, dice)
-
-        if feral_hogs:
-            diff2 = strategy1(score1, score0) - prevScore1
-            if abs(diff2) == 2:
-                bonus = 3
-
-        score1 = score1 + currScore1 + bonus
-
-        if is_swap(score1, score0):
-            score1, score0 = score0, score1
-
-        bonus, prevScore1 = 0, currScore1
+            die1 = strategy1(score1, score0)
+            if feral_hogs and abs(die1 - prev_score1) == 2:
+                score1 += 3
+            prev_score1 = take_turn(die1, score0, dice)
+            score1 += prev_score1
+            if (is_swap(score1, score0)):
+                score1, score0 = score0, score1
+        say = say(score0, score1)
+        who = other(who)
 
     # END PROBLEM 6
     return score0, score1
@@ -266,6 +270,22 @@ def announce_highest(who, last_score=0, running_high=0):
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    def say(score0, score1):
+        nonlocal last_score
+        nonlocal running_high
+        if not who:
+            if score0 - last_score > running_high:
+                print(
+                    f"{score0 - last_score} point(s)! That's the biggest gain yet for Player {who}")
+                return announce_highest(who, score0, score0 - last_score)
+            return announce_highest(who, score0, running_high)
+        else:
+            if score1 - last_score > running_high:
+                print(
+                    f"{score1 - last_score} point(s)! That's the biggest gain yet for Player {who}")
+                return announce_highest(who, score1, score1 - last_score)
+            return announce_highest(who, score1, running_high)
+    return say
     # END PROBLEM 7
 
 
