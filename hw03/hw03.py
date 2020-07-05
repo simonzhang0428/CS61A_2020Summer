@@ -207,3 +207,14 @@ def make_anonymous_factorial():
     """
     return (lambda f:f(f))(lambda f:lambda n: 1 if n == 1 else mul(n,f(f)(n-1)))
 
+    # def make_anonymous_factorial():
+    #     def func1(factorial_function):
+    #         def func2(k):
+    #             factorial_function(factorial_function, k))
+    #     return func2
+    #     def factorial(recursive_func, k):
+    #         if k == 1:
+    #          return k
+    #     else:
+    #         return k * recursive_func(recursive_func, k-1)
+    # return func1(factorial)
