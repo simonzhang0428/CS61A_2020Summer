@@ -1,3 +1,10 @@
+# Isolate two parts of any program to use data:
+# how data are represented (as parts)
+# how data are manipulated (as units)
+# enforce an abstraction barrier between representation and use
+
+# you can recoginize data abstruction by ites behavior.(not implementation)
+
 # data abstraction isolates how a compound data value is used from the details of how it is constructed. The basic
 # idea of data abstraction is to structure programs so that they operate on abstract data. That is, our programs
 # should use data in such a way as to make as few assumptions about the data as possible. At the same time,
@@ -13,11 +20,11 @@
 # or how the functions numer, denom, and rational should be implemented.
 
 pair = [10, 20]
-x, y = pair
+x, y = pair  # unpacking
 print('x, y:', x, y)
 
 # index represents how far an element is offset from the beginning of the list.
-# start form 0, getitem
+# start form 0, getitem, offset, substract get length
 from operator import getitem
 
 x = getitem(pair, 0)
@@ -26,11 +33,12 @@ print('x, y:', x, y)
 
 
 def rational1(n, d):
+    """Construct a rational number taht represent N/D."""
     return [n, d]
 
 from math import gcd
 def rational(n, d):
-    g = gcd(n, d)
+    g = gcd(n, d)  # reduce to lowest term
     return (n//g, d//g)
 
 def numer(x):
@@ -91,5 +99,6 @@ def select(p, i):
     return p(i)
 
 p = pair(20, 14)
+print('pair => ', p)
 print('index 0:', select(p, 0))
 print('index 1:', select(p, 1))
