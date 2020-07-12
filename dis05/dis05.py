@@ -148,4 +148,5 @@ print('label(t) ->', label(t))
 print('branches(tree(2, tree(t, [])))[0] ->', branches(tree(2, tree(t, [])))[0])
 
 # mutation
+pizza = ['cheese', 'mushroom']
 
