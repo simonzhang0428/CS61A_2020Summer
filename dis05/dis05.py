@@ -150,3 +150,111 @@ print('branches(tree(2, tree(t, [])))[0] ->', branches(tree(2, tree(t, [])))[0])
 # mutation
 pizza = ['cheese', 'mushroom']
 
+# 1. append(el): Adds el to the end of the list, and returns None
+# 2. extend(lst): Extends the list by concatenating it with lst, and returns None
+# 3. insert(i, el): Insert el at index i (does not replace element but adds a new one), and returns None
+# 4. remove(el): Removes the first occurrence of el in list, otherwise errors, and returns None
+# 5. pop(i): Removes and returns the element at index i
+lst1 = [1, 2, 3]
+lst2 = lst1
+print('lst2 is lst1:', lst2 is lst1)
+lst2.extend([5, 6])
+print('lst1[4]:', lst1[4])
+lst1.append([-1, 0, 1])
+print('-1 in lst1:', -1 in lst1)
+print('lst2[5]:', lst2[5])
+lst3 = lst2[:]  # Slicing a list creates a new list and leaves the original list unchanged.
+lst3.insert(3, lst2.pop(3))
+print('len(lst1):', len(lst1))
+print('lst1[4] is lst3[6]:', lst1[4] is lst3[6])
+print('lst3[lst2[4][1]]:', lst3[lst2[4][1]])
+print('lst1[:3] is lst2[:3]:', lst1[:3] is lst2[:3])
+print('lst1[:3] == lst2[:3]:', lst1[:3] == lst2[:3])
+
+x = (1, 2, [4, 5, 6])
+print('x:', x)
+# x[2] = [3, 5, 6]
+x[2][0] = 3
+print('x:', x)
+
+
+def add_this_many(x, el, lst):
+    """ Adds el to the end of lst the number of times x occurs in lst.
+    >>> lst = [1, 2, 4, 2, 1]
+    >>> add_this_many(1, 5, lst)
+    >>> lst
+    [1, 2, 4, 2, 1, 5, 5]
+    >>> add_this_many(2, 2, lst)
+    >>> lst
+    [1, 2, 4, 2, 1, 5, 5, 2, 2]
+    """
+    times = lst.count(x)
+    return lst.extend([el] * times)
+
+
+def group_by(s, fn):
+    """The values of the dictionary are lists of elements from s.
+    Each element e in a list should be constructed such that fn(e) is the same
+    for all elements in that list. Finally, the key for each value should be fn(e).
+
+    >>> group_by([12, 23, 14, 45], lambda p: p // 10)
+    {1: [12, 14], 2: [23], 4: [45]}
+    >>> group_by(range(-3, 4), lambda x: x * x)
+    {9: [-3, 3], 4: [-2, 2], 1: [-1, 1], 0: [0]}
+    """
+    result = {}
+    for el in s:
+        key = fn(el)
+        if key not in result:
+            result[key] = [el]
+        else:
+            result[key] += [el]
+    return result
+
+    # result = {}
+    # for el in s:
+    #     key = fn(el)
+    #     if key in result:
+    #         result[key].append(el)
+    #     else:
+    #         result[key] = [el]
+    # return result
+
+
+def partition_options(total, biggest):
+    """Outputs all the ways to partition a number
+    total using numbers no larger than biggest.
+
+    >>> partition_options(2, 2)
+    [[2], [1, 1]]
+    >>> partition_options(3, 3)
+    [[3], [2, 1], [1, 1, 1]]
+    >>> partition_options(4, 3)
+    [[3, 1], [2, 2], [2, 1, 1], [1, 1, 1, 1]]
+    """
+    if total == 0:
+        return [[]]
+    elif total < 0 or biggest == 0:
+        return []
+    else:
+        with_biggest = partition_options(total - biggest, biggest)
+        without_biggest = partition_options(total, biggest - 1)
+        with_biggest = [[biggest] + elem for elem in with_biggest]
+        return with_biggest + without_biggest
+
+
+def min_elements(T, lst):
+    """Return the minimum number of elements from the list that need to be summed in order to add up to T.
+    The same element can be used multiple times in the sum.
+    >>> min_elements(10, [4, 2, 1]) # 4 + 4 + 2
+    3
+    >>> min_elements(12, [9, 4, 1]) # 4 + 4 + 4
+    3
+    >>> min_elements(0, [1, 2, 3])
+    0
+    """
+    if T == 0:
+        return 0
+    else:
+        return min([1 + min_elements(T - i, lst) for i in lst if T - i >= 0])
+
