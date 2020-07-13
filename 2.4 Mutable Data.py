@@ -6,6 +6,12 @@ print('date(2020, 7, 30) - saturday ->', date(2020, 7, 30) - saturday)
 print('saturday.year ->', saturday.year)
 print(saturday.strftime('%A, %B %d'))  # %A means that the day of the week should be spelled out in full
 
+# string
+s = 'Hello'
+print('s.upper():', s.upper())
+a = 'a'
+print('ord(a):', ord(a))
+print('hex(ord(a)):', hex(ord(a)))
 print('\'1234\'.isnumeric() ->', '1234'.isnumeric())
 print('\'rOBERT dE nIRO\'.swapcase() ->', 'rOBERT dE nIRO'.swapcase())
 print("'eyes'.upper().endswith('YES') ->", 'eyes'.upper().endswith('YES'))
@@ -32,7 +38,7 @@ suits.insert(2, 'Joker')  # Insert an element at index 2, shifting the rest
 print('nest:', nest)
 print('nest[0].pop(2):', nest[0].pop(2))
 
-# is and is not, test whether two expressions in fact evaluate to the identical object.
+# is and is not, test whether two expressions in fact evaluate to the same object.
 # Two objects are identical if they are equal in their current value,
 # and any change to one will always be reflected in the other.
 # Identity is a stronger condition than equality.
@@ -84,4 +90,56 @@ from unicodedata import lookup
 # the unicodedata module tracks the official names of every character in the Unicode alphabet.
 # We can look up the characters corresponding to names, including those for card suits.
 print([lookup('WHITE ' + s.upper() + ' SUIT') for s in suits])
+print(lookup('SNOWMAN'))
+print(lookup('white smiling face'))
+print(lookup('baby'))
+print(lookup('BABY'))
+print(lookup('baby').encode())
+print(lookup('girl'))
+
+# Tuples
+a = 1, 2 + 3
+print('a:', a)
+b = ('the', 1, ('and', 'only'))
+print('b', b)
+print('type(())', type(()))
+print('type((10))', type((10)))
+print('type((10,))', type((10,)))
+
+code = ("up", "up", "down", "down") + ("left", "right") * 2
+print('code:', code)
+print('len(code):', len(code))
+print('code.count(\'down\'):', code.count('down'))
+print('code.index(\'left\'):', code.index('left'))
+
+# Dictionaries
+# The purpose of a dictionary is to provide an abstraction for storing and retrieving values
+# that are indexed not by consecutive integers, but by descriptive keys.
+
+# Strings commonly serve as keys, because strings are our conventional representation for names of things.
+# This dictionary literal gives the values of various Roman numerals.
+numerals = {'I': 1.0, 'V': 5, 'X': 10}
+print('numerals:', numerals)
+print('numerals[\'V\']:', numerals['V'])
+numerals['I'] = 1
+numerals['L'] = 50
+print('numerals:', numerals)  # Since Python 3.6, their contents will be ordered by insertion.
+print('sum(numerals.values()):', sum(numerals.values()))
+print('numerals.keys():', numerals.keys())
+print('numerals.values()', numerals.values())
+print('numerals.items():', numerals.items())
+dogs = dict([('dudu', 3), ('penny', 6)])  # list convert to dictionary
+print('dogs:', dogs)
+
+# Dictionaries do have some restrictions:
+#
+# A key of a dictionary cannot be or contain a mutable value.
+# There can be at most one value for a given key.
+
+# get, which returns either the value for a key, if the key is present, or a default value.
+print('numerals.get(\'A\', 0):', numerals.get('A', 0))
+print('numerals.get(\'X\', 0):', numerals.get('X', 0))
+
+d = {x: x*x for x in range(3,6)}
+print(d)
 
