@@ -140,6 +140,75 @@ print('dogs:', dogs)
 print('numerals.get(\'A\', 0):', numerals.get('A', 0))
 print('numerals.get(\'X\', 0):', numerals.get('X', 0))
 
-d = {x: x*x for x in range(3,6)}
+d = {x: x * x for x in range(3, 6)}
 print(d)
 
+
+# Ever since we first encountered nested def statements, we have observed that a locally defined function can look up
+# names outside of its local frames. No nonlocal statement is required to access a non-local name. By contrast,
+# only after a nonlocal statement can a function change the binding of names in these frames.
+
+# The key to correctly analyzing code with non-local assignment is to remember that only function calls can introduce
+# new frames. Assignment statements always change bindings in existing frames.
+
+# nonlocal => name must find in the parent frame, not bind in the local frame.
+def make_withdraw(balance):
+    """Return a withdraw function that draws down balance with each call."""
+
+    def withdraw(amount):
+        nonlocal balance
+        if amount > balance:
+            return 'Insufficient funds.'
+        balance = balance - amount
+        return balance
+
+    return withdraw
+
+
+withdraw = make_withdraw(100)
+print(withdraw(25))
+
+
+def make_withdraw_list(balance):
+    b = [balance]
+
+    def withdraw(amount):
+        if amount > b[0]:
+            return 'Insufficient funds.'
+        b[0] = b[0] - amount
+        return b[0]
+
+    return withdraw
+
+
+withdraw = make_withdraw_list(100)
+print(withdraw(25))
+
+
+def f(x):
+    x = 4
+    def g(y):
+        def h(z):
+            nonlocal x
+            x = x + 1
+            return x + y + z
+        return h
+    return g
+
+a = f(1)
+b = a(2)
+total = b(3) + b(4)
+
+# An expression that contains only pure function calls is referentially transparent;
+# its value does not change if we substitute one of its subexpression with the value of that subexpression.
+
+def oski(bear):
+    def cal(berk):
+        nonlocal bear
+        if bear(berk) == 0:
+            return [berk+1, berk-1]
+        bear = lambda ley: berk-ley
+        return [berk, cal(berk)]
+    return cal(2)
+
+oski(abs)
