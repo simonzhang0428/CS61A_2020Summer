@@ -70,17 +70,13 @@ def accuracy(typed, reference):
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
     count = 0
+    for i in range(min(len(typed_words), len(reference_words))):
+        if typed_words[i] == reference_words[i]:
+            count += 1
     if len(typed_words) == 0:
         return 0.0
-    elif len(typed_words) > len(reference_words):
-        for i in range(len(reference_words)):
-            if typed_words[i] == reference_words[i]:
-                count += 1
     else:
-        for i in range(len(typed_words)):
-            if typed_words[i] == reference_words[i]:
-                count += 1
-    return count / len(typed_words) * 100.0
+        return count / len(typed_words) * 100.0
     # END PROBLEM 3
 
 
