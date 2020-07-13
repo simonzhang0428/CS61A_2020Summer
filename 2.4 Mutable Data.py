@@ -151,7 +151,11 @@ print(d)
 # The key to correctly analyzing code with non-local assignment is to remember that only function calls can introduce
 # new frames. Assignment statements always change bindings in existing frames.
 
-# nonlocal => name must find in the parent frame, not bind in the local frame.
+# Some important things to keep in mind when using nonlocal:
+#   nonlocal cannot be used with global variables (names defined in the global frame).
+#   If no nonlocal variable is found with the given name, a SyntaxError is raised.
+#   A name that is already local to a frame cannot be declared as nonlocal.
+
 def make_withdraw(balance):
     """Return a withdraw function that draws down balance with each call."""
 
