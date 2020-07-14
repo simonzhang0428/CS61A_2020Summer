@@ -38,12 +38,14 @@ def about(topic):
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+
     def f(x):
         x = split(lower(remove_punctuation(x)))
         for elem in topic:
             if elem in x:
                 return True
         return False
+
     return f
     # END PROBLEM 2
 
@@ -98,6 +100,32 @@ def autocorrect(user_word, valid_words, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    # if user_word in valid_words:
+    #     return user_word
+    # else:
+    #     for_pick = {}
+    #     for valid_word in valid_words:
+    #         diff = diff_function(user_word, valid_word, limit)
+    #         if diff <= limit and diff not in for_pick.keys():
+    #             for_pick[diff] = [valid_word]
+    #         elif diff <= limit and diff in for_pick.keys():
+    #             for_pick[diff].append(valid_word)
+    #     if not for_pick:
+    #         return user_word
+    #     min_key = min(for_pick.keys())
+    #     return for_pick[min_key][0]
+
+    if user_word in valid_words:
+        return user_word
+    else:
+        closest_word = min(
+            valid_words, key=lambda valid_word: diff_function(user_word, valid_word, limit))
+
+        diff = diff_function(user_word, closest_word, limit)
+        if (diff <= limit):
+            return closest_word
+        else:
+            return user_word
     # END PROBLEM 5
 
 
@@ -107,7 +135,26 @@ def shifty_shifts(start, goal, limit):
     their lengths.
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+
+    # count = 0
+    # for i in range(min(len(start), len(goal))):
+    #     if start[i] != goal[i]:
+    #         count += 1
+    #     if count >= limit:
+    #         return limit + 1
+    # return count + abs(len(goal) - len(start))
+
+    def helper(s1, s2, diff):
+        if diff > limit:
+            return limit + 1
+        if not s1 or not s2:
+            return diff + max(len(s1), len(s2))
+        elif s1[0] == s2[0]:
+            return helper(s1[1:], s2[1:], diff)
+        else:
+            return helper(s1[1:], s2[1:], diff + 1)
+
+    return helper(start, goal, 0)
     # END PROBLEM 6
 
 
@@ -115,12 +162,12 @@ def meowstake_matches(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
     assert False, 'Remove this line'
 
-    if ______________: # Fill in the condition
+    if ______________:  # Fill in the condition
         # BEGIN
         "*** YOUR CODE HERE ***"
         # END
 
-    elif ___________: # Feel free to remove or add additional cases
+    elif ___________:  # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
         # END
@@ -186,7 +233,7 @@ def fastest_words(game):
         a list of lists containing which words each player typed fastest
     """
     players = range(len(all_times(game)))  # An index for each player
-    words = range(len(all_words(game)))    # An index for each word
+    words = range(len(all_words(game)))  # An index for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
     # END PROBLEM 10
@@ -228,6 +275,7 @@ def game_string(game):
     """A helper function that takes in a game object and returns a string representation of it"""
     return "game(%s, %s)" % (game[0], game[1])
 
+
 enable_multiplayer = False  # Change to True when you
 
 ##########################
@@ -235,26 +283,32 @@ enable_multiplayer = False  # Change to True when you
 ##########################
 
 key_distance = get_key_distances()
+
+
 def key_distance_diff(start, goal, limit):
     """ A diff function that takes into account the distances between keys when
     computing the difference score."""
 
-    start = start.lower() #converts the string to lowercase
-    goal = goal.lower() #converts the string to lowercase
+    start = start.lower()  # converts the string to lowercase
+    goal = goal.lower()  # converts the string to lowercase
 
     # BEGIN PROBLEM EC1
     "*** YOUR CODE HERE ***"
     # END PROBLEM EC1
 
+
 def memo(f):
     """A memoization function as seen in John Denero's lecture on Growth"""
 
     cache = {}
+
     def memoized(*args):
         if args not in cache:
             cache[args] = f(*args)
         return cache[args]
+
     return memoized
+
 
 key_distance_diff = count(key_distance_diff)
 
