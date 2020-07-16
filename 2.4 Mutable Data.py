@@ -215,4 +215,111 @@ def oski(bear):
         return [berk, cal(berk)]
     return cal(2)
 
-oski(abs)
+print(oski(abs))
+
+# iterator
+primes = [2, 3, 5, 7]
+print('prime:', primes)
+print('type(primes):', type(primes))
+iterator = iter(primes)
+print('type(iterator):', type(iterator))
+print('next(iterator):', next(iterator))
+print('next(iterator):', next(iterator))
+print('next(iterator):', next(iterator))
+print('next(iterator):', next(iterator))
+# print('next(iterator):', next(iterator))  # raising a StopIteration exception
+
+# Two separate iterators can track two different positions in the same sequence.
+# However, two names for the same iterator will share a position
+# because they share the same value.
+r = range(3, 13)
+s = iter(r)
+print('next(s):', next(s))
+print('next(s):', next(s))
+t = iter(r)
+print('next(t):', next(t))
+print('next(t):', next(t))
+u = t  # another name for iterator t
+print('next(u):', next(u))
+print('next(u):', next(u))
+print('next(s):', next(s))
+print('next(t):', next(t))
+
+d = {'one': 1, 'two': 2, 'three': 3}
+k = iter(d)
+print('next(k)', next(k))
+print('next(k)', next(k))
+print('next(k)', next(k))
+v = iter(d.values())
+print('next(v)', next(v))
+print('next(v)', next(v))
+print('next(v)', next(v))
+d.pop('two')
+# RuntimeError: dictionary changed size during iteration
+# print('next(k)', next(k))
+
+r = range(3, 6)
+s = iter(r)
+print('next(s)', next(s))
+for x in s:
+    print(x)
+print('list(s)', list(s))
+for x in r:
+    print(x)
+
+def double_and_print(x):
+    print('***', x, '=>', 2*x, '***')
+    return 2*x
+
+s = range(3, 6)
+doubled = map(double_and_print, s)
+a = next(doubled)
+print(a)
+a = next(doubled)
+print(a)
+lst = list(doubled)
+print(lst)
+
+# The filter function returns an iterator over a subset of the values in another iterable.
+# The zip function returns an iterator over tuples of values that combine one value from each of multiple iterables.
+
+letters_list = ['a', 'b', 'd', 'e', 'i', 'j', 'o']
+
+def filterVowels(letter):
+    vowels = ['a', 'e', 'i', 'o', 'u']
+    return letter in vowels
+
+filteredVowels = filter(filterVowels, letters_list)
+print(next(filteredVowels))
+print(next(filteredVowels))
+print(next(filteredVowels))
+print(next(filteredVowels))
+
+
+print('The filtered vowels are:')
+for vowel in filteredVowels:
+    print(vowel)  # empty
+
+# Generator
+# When called, a generator function doesn't return a particular yielded value,
+# but instead a generator (which is a type of iterator) that itself can return the yielded values.
+# Calling next on the generator continues execution of the generator function from wherever it left off previously
+# until another yield statement is executed.
+
+#  yield statements do not destroy the newly created environment; they preserve it for later.
+#  When next is called again, execution resumes where it left off.
+def letters_generator():
+    current = 'a'
+    while current <= 'd':
+        yield current
+        current = chr(ord(current)+1)
+
+for letter in letters_generator():
+    print(letter)
+
+letters = letters_generator()
+print('type(letter)', type(letters))
+print('next(letters)', next(letters))
+print('next(letters)', next(letters))
+print('next(letters)', next(letters))
+print('next(letters)', next(letters))
