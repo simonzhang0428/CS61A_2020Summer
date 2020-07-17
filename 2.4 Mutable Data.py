@@ -435,6 +435,7 @@ deposit(a, 5)
 withdraw(a, 17)
 check_balance(a)
 
+
 # Expressing programs as constraints is a type of declarative programming, in which a programmer declares the
 # structure of a problem to be solved, but abstracts away the details of exactly how the solution to the problem is
 # computed.
@@ -442,3 +443,54 @@ check_balance(a)
 # Constraints and connectors are both abstractions that are manipulated through messages. When the value of a
 # connector is changed, it is changed via a message that not only changes the value, but validates it (checking the
 # source) and propagates its effects (informing other constraints).
+
+# generator pause when reach yield
+def evens(start, end):
+    even = start + start % 2
+    while even < end:
+        yield even
+        even += 2
+
+
+t = evens(1, 10)
+print('type(t)', type(t))
+print('next(t)', next(t))
+print('next(t)', next(t))
+print('next(t)', next(t))
+print('next(t)', next(t))
+print('list(evens(1, 10))', list(evens(1, 10)))
+
+
+def countdown(k):
+    if k > 0:
+        yield k
+        # for x in countdown(k-1):
+        #     yield x
+        yield from countdown(k - 1)  # shorthand for go through iterator
+    else:
+        yield 'END!'
+
+
+t = countdown(3)
+print('next(t)', next(t))
+print('next(t)', next(t))
+print('next(t)', next(t))
+print('next(t)', next(t))
+
+
+def prefixes(s):
+    if s:
+        yield from prefixes(s[:-1])
+        yield s
+
+
+print('list(prefixes(\'both\'))', list(prefixes('both')))
+
+
+def substrings(s):
+    if s:
+        yield from prefixes(s)
+        yield from substrings(s[1:])
+
+
+print('list(substrings(\'tops\'))', list(substrings('tops')))
