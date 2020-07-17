@@ -191,17 +191,22 @@ print(withdraw(25))
 
 def f(x):
     x = 4
+
     def g(y):
         def h(z):
             nonlocal x
             x = x + 1
             return x + y + z
+
         return h
+
     return g
+
 
 a = f(1)
 b = a(2)
 total = b(3) + b(4)
+
 
 # An expression that contains only pure function calls is referentially transparent;
 # its value does not change if we substitute one of its subexpression with the value of that subexpression.
@@ -210,14 +215,16 @@ def oski(bear):
     def cal(berk):
         nonlocal bear
         if bear(berk) == 0:
-            return [berk+1, berk-1]
-        bear = lambda ley: berk-ley
+            return [berk + 1, berk - 1]
+        bear = lambda ley: berk - ley
         return [berk, cal(berk)]
+
     return cal(2)
+
 
 print(oski(abs))
 
-# iterator
+# iterator, position in container
 primes = [2, 3, 5, 7]
 print('prime:', primes)
 print('type(primes):', type(primes))
@@ -267,9 +274,11 @@ print('list(s)', list(s))
 for x in r:
     print(x)
 
+
 def double_and_print(x):
-    print('***', x, '=>', 2*x, '***')
-    return 2*x
+    print('***', x, '=>', 2 * x, '***')
+    return 2 * x
+
 
 s = range(3, 6)
 doubled = map(double_and_print, s)
@@ -277,7 +286,7 @@ a = next(doubled)
 print(a)
 a = next(doubled)
 print(a)
-lst = list(doubled)
+lst = list(doubled)  # what left in a list
 print(lst)
 
 # The filter function returns an iterator over a subset of the values in another iterable.
@@ -285,9 +294,11 @@ print(lst)
 
 letters_list = ['a', 'b', 'd', 'e', 'i', 'j', 'o']
 
+
 def filterVowels(letter):
     vowels = ['a', 'e', 'i', 'o', 'u']
     return letter in vowels
+
 
 filteredVowels = filter(filterVowels, letters_list)
 print(next(filteredVowels))
@@ -295,10 +306,10 @@ print(next(filteredVowels))
 print(next(filteredVowels))
 print(next(filteredVowels))
 
-
 print('The filtered vowels are:')
 for vowel in filteredVowels:
     print(vowel)  # empty
+
 
 # Generator
 # When called, a generator function doesn't return a particular yielded value,
@@ -312,7 +323,8 @@ def letters_generator():
     current = 'a'
     while current <= 'd':
         yield current
-        current = chr(ord(current)+1)
+        current = chr(ord(current) + 1)
+
 
 for letter in letters_generator():
     print(letter)
@@ -323,3 +335,110 @@ print('next(letters)', next(letters))
 print('next(letters)', next(letters))
 print('next(letters)', next(letters))
 print('next(letters)', next(letters))
+
+# Linked List
+empty = 'empty'
+
+
+# the function is a dispatch function and its arguments are first a message, followed by additional arguments to
+# parameterize that method. This message is a string naming what the function should do. Dispatch functions are
+# effectively many functions in one: the message determines the behavior of the function, and the additional
+# arguments are used in that behavior.
+
+# encapsulates the logic for all operations on a data value within one function that responds to different messages,
+# is a discipline called message passing. A program that uses message passing defines dispatch functions,
+# each of which may have local state, and organizes computation by passing "messages" as the first argument to those
+# functions. The messages are strings that correspond to particular behaviors.
+
+# def mutable_link():
+#     """Return a functional implementation of a mutable linked list."""
+#     contents = empty
+#     def dispatch(message, value=None):
+#         nonlocal contents
+#         if message == 'len':
+#             return len_link(contents)
+#         elif message == 'getitem':
+#             return getitem_link(contents, value)
+#         elif message == 'push_first':
+#             contents = link(value, contents)
+#         elif message == 'pop_first':
+#             f = first(contents)
+#             contents = rest(contents)
+#             return f
+#         elif message == 'str':
+#             return join_link(contents, ", ")
+#     return dispatch
+
+def dictionary():
+    """Return a functional implementation of a dictionary."""
+    records = []
+
+    def getitem(key):
+        matches = [r for r in records if r[0] == key]
+        if len(matches) == 1:
+            key, value = matches[0]
+            return value
+
+    def setitem(key, value):
+        nonlocal records
+        non_matches = [r for r in records if r[0] != key]
+        records = non_matches + [[key, value]]
+
+    def dispatch(message, key=None, value=None):
+        if message == 'getitem':
+            return getitem(key)
+        elif message == 'setitem':
+            setitem(key, value)
+
+    return dispatch
+
+
+d = dictionary()
+d('setitem', 3, 9)
+d('setitem', 4, 16)
+print('d(\'getitem\', 3):', d('getitem', 3))
+print('d(\'getitem\', 4):', d('getitem', 4))
+print('d(\'getitem\', 0):', d('getitem', 0))
+
+
+def account(initial_balance):
+    def deposit(amount):
+        dispatch['balance'] += amount
+        return dispatch['balance']
+
+    def withdraw(amount):
+        if amount > dispatch['balance']:
+            return 'Insufficient funds'
+        dispatch['balance'] -= amount
+        return dispatch['balance']
+
+    dispatch = {'deposit': deposit,
+                'withdraw': withdraw,
+                'balance': initial_balance}
+    return dispatch
+
+
+def withdraw(account, amount):
+    return account['withdraw'](amount)
+
+
+def deposit(account, amount):
+    return account['deposit'](amount)
+
+
+def check_balance(account):
+    return account['balance']
+
+
+a = account(20)
+deposit(a, 5)
+withdraw(a, 17)
+check_balance(a)
+
+# Expressing programs as constraints is a type of declarative programming, in which a programmer declares the
+# structure of a problem to be solved, but abstracts away the details of exactly how the solution to the problem is
+# computed.
+
+# Constraints and connectors are both abstractions that are manipulated through messages. When the value of a
+# connector is changed, it is changed via a message that not only changes the value, but validates it (checking the
+# source) and propagates its effects (informing other constraints).
