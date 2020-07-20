@@ -134,6 +134,7 @@ def shifty_shifts(start, goal, limit):
     in START need to be substituted to create GOAL, then adds the difference in
     their lengths.
     """
+
     # BEGIN PROBLEM 6
 
     # count = 0
@@ -199,6 +200,16 @@ def report_progress(typed, prompt, id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    count = 0
+    for i in range(len(typed)):
+        if typed[i] == prompt[i]:
+            count += 1
+        else:
+            break
+    rate = count / len(prompt)
+    dictionary = {'id': id, 'progress': rate}
+    send(dictionary)
+    return rate
     # END PROBLEM 8
 
 
@@ -225,6 +236,10 @@ def time_per_word(times_per_player, words):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    interval = []
+    for player in times_per_player:
+        interval.append([player[i] - player[i - 1] for i in range(1, len(player))])
+    return game(words, interval)
     # END PROBLEM 9
 
 
@@ -236,10 +251,42 @@ def fastest_words(game):
     Returns:
         a list of lists containing which words each player typed fastest
     """
-    players = range(len(all_times(game)))  # An index for each player
-    words = range(len(all_words(game)))  # An index for each word
+    players = range(len(all_times(game)))  # An index for each player #0, 1
+    words = range(len(all_words(game)))  # An index for each word #0, 1, 2
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    # l0, l1 = [], []
+    # for i in words:
+    #     if time(game, 0, i) <= time(game, 1, i):
+    #         l0.append(word_at(game, i))
+    #     else:
+    #         l1.append(word_at(game, i))
+    # return [l0] + [l1]
+
+    lst = [[] for _ in players]
+    for w in words:
+        min_index = 0
+        min_time = float('inf')
+        for p in players:
+            if time(game, p, w) < min_time:
+                min_index = p
+                min_time = time(game, p, w)
+        lst[min_index].append(word_at(game, w))
+    return lst
+
+    # lst = []
+    # for p in players:
+    #     lst.append([])
+    # d = {}
+    # for w in words:
+    #     key = word_at(game, w)
+    #     d[key] = []
+    #     for p in players:
+    #         d[key].append(time(game, p, w))
+    # for word, value in d.items():
+    #     p = value.index(min(value))
+    #     lst[p].append(word)
+    # return lst
     # END PROBLEM 10
 
 
@@ -280,7 +327,7 @@ def game_string(game):
     return "game(%s, %s)" % (game[0], game[1])
 
 
-enable_multiplayer = False  # Change to True when you
+enable_multiplayer = True  # Change to True when you
 
 ##########################
 # Extra Credit #
@@ -298,6 +345,7 @@ def key_distance_diff(start, goal, limit):
 
     # BEGIN PROBLEM EC1
     "*** YOUR CODE HERE ***"
+
     # END PROBLEM EC1
 
 
