@@ -82,3 +82,63 @@ Account.interest = 1.0
 print('Account.interest:', Account.interest)
 print('a.interest:', a.interest)
 print('b.interest:', b.interest)
+
+
+# Inheritance
+# A subclass inherits the attributes of its base class, but may override certain attributes, including certain methods.
+# With inheritance, we only specify what is different between the subclass and the base class.
+# Anything that we leave unspecified in the subclass is automatically assumed to behave just as it would for the base class.
+# (The terms parent class and superclass are also used for the base class, while child class is also used for the subclass.)
+
+class CheckingAccount(Account):
+    """A bank account that charges for withdrawal."""
+    withdraw_charge = 1
+    interest = 0.01
+
+    def withdraw(self, amount):
+        return Account.withdraw(self, amount + self.withdraw_charge)
+
+
+checking = CheckingAccount('Sam')
+print('checking.deposit(10):', checking.deposit(10))
+print('checking.withdraw(5):', checking.withdraw(5))
+print('checking.interest:', checking.interest)
+
+
+# To look up a name in a class.
+#
+# If it names an attribute in the class, return the attribute value.
+# Otherwise, look up the name in the base class, if there is one.
+
+# An object interface is a collection of attributes and conditions on those attributes.
+def deposit_all(winners, amount=5):
+    for account in winners:
+        account.deposit(amount)
+
+
+class SavingsAccount(Account):
+    deposit_charge = 2
+
+    def deposit(self, amount):
+        return Account.deposit(self, amount - self.deposit_charge)
+
+
+# multiple inheritance
+# Method Resolution Order: Python resolves names from left to right, then upwards
+class AsSeenOnTVAccount(CheckingAccount, SavingsAccount):
+    def __init__(self, account_holder):
+        self.holder = account_holder
+        self.balance = 1  # A free dollar!
+
+
+such_a_deal = AsSeenOnTVAccount('John')
+print('such_a_deal.balance:', such_a_deal.balance)
+print('such_a_deal.deposit(20):', such_a_deal.deposit(20))
+print('such_a_deal.withdraw(5):', such_a_deal.withdraw(5))
+print('such_a_deal.deposit_charge:', such_a_deal.deposit_charge)
+print('such_a_deal.withdraw_charge:', such_a_deal.withdraw_charge)
+
+print([c.__name__ for c in AsSeenOnTVAccount.mro()])  # Method Resolution Order
+
+# Learning to identify when to introduce a new class, as opposed to a new function, in order to simplify
+# or modularize a program, is an important design skill in software engineering that deserves careful attention.
