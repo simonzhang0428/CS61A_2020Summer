@@ -140,5 +140,59 @@ print('such_a_deal.withdraw_charge:', such_a_deal.withdraw_charge)
 
 print([c.__name__ for c in AsSeenOnTVAccount.mro()])  # Method Resolution Order
 
+
 # Learning to identify when to introduce a new class, as opposed to a new function, in order to simplify
 # or modularize a program, is an important design skill in software engineering that deserves careful attention.
+
+class Bank:
+    def __init__(self):
+        self.accounts = []
+
+    def open_account(self, holder, amount, kind=Account):
+        account = kind(holder)
+        account.deposit(amount)
+        self.accounts.append(account)
+        return account
+
+    def pay_interest(self):
+        for a in self.accounts:
+            a.deposit(a.balance * a.interest)
+
+    def too_big_to_fail(self):
+        return len(self.accounts) > 1
+
+
+bank = Bank()
+john = bank.open_account('john', 10)
+jack = bank.open_account('jack', 5, CheckingAccount)
+print('john.interest:', john.interest)
+print('jack.interest:', jack.interest)
+bank.pay_interest()
+print('john.balance:', john.balance)
+print('bank.too_big_to_fail():', bank.too_big_to_fail())
+
+# practice
+class A:
+    z = -1
+    def f(self, x):
+        return B(x-1)
+
+class B(A):
+    n = 4
+    def __init__(self, y):
+        if y:
+            self.z = self.f(y)
+        else:
+            self.z = C(y+1)
+
+class C(B):
+    def f(self, x):
+        return x
+
+a = A()
+b = B(1)
+b.n = 5
+
+print('C(2).n:', C(2).n)
+print('a.z == C.z:', a.z == C.z)
+print('a.z == b.z:', a.z == b.z)
