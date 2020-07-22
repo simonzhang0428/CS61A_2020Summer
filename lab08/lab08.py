@@ -34,4 +34,16 @@ def make_generators_generator(g):
     """
     "*** YOUR CODE HERE ***"
 
+    def gen(i):
+        for entry in g():
+            if i <= 0:
+                return
+            yield entry
+            i -= 1
+
+    i = 1
+    for entry in g():
+        yield gen(i)
+        i += 1
+
 
