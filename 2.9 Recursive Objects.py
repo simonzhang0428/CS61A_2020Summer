@@ -96,24 +96,166 @@ def join_link(s, separator):
 print('join_link(s, ', '):', join_link(s, ', '))
 
 
-def partitions(n, m):
-    """Return a linked list of partitions of n using parts of up to m.
-    Each partition is represented as a linked list.
-    """
-    if n == 0:
-        return Link(Link.empty)
-    elif n < 0 or m == 0:
+# def partitions(n, m):
+#     """Return a linked list of partitions of n using parts of up to m.
+#     Each partition is represented as a linked list.
+#     """
+#     if n == 0:
+#         return Link(Link.empty)
+#     elif n < 0 or m == 0:
+#         return Link.empty
+#     else:
+#         using_m = partitions(n - m, m)
+#         with_m = map_link(lambda s: Link(m, s), using_m)
+#         without_m = partitions(n, m - 1)
+#         return with_m + without_m
+#
+# def print_partitions(n, m):
+#     lists = partitions(n, m)
+#     strings = map_link(lambda s: join_link(s, ' + '), lists)
+#     print(join_link(strings, '\n'))
+#
+#
+# print_partitions(6, 4)
+
+# Tree
+class Tree:
+    def __init__(self, label, branches=()):
+        self.label = label
+        for branch in branches:
+            assert isinstance(branch, Tree)
+        self.branches = branches
+
+    def __repr__(self):
+        if self.branches:
+            return 'Tree({0}, {1})'.format(self.label, repr(self.branches))
+        else:
+            return 'Tree({0})'.format(self.label)
+
+    def is_leaf(self):
+        return not self.branches
+
+
+def fib_tree(n):
+    if n == 1:
+        return Tree(0)
+    elif n == 2:
+        return Tree(1)
+    else:
+        left = fib_tree(n - 2)
+        right = fib_tree(n - 1)
+        return Tree(left.label + right.label, (left, right))
+
+
+print('fib_tree(5):', fib_tree(5))
+
+
+def sum_labels(t):
+    return t.label + sum([sum_labels(b) for b in t.branches])
+
+
+print('sum_labels(fib_tree(5)):', sum_labels(fib_tree(5)))
+
+# Sets
+s = {3, 2, 1, 4, 4}
+s2 = {5, 6}
+s3 = {1, 2}
+print('s3:', s3)
+print('s2:', s2)
+print('s:', s)
+print('3 in s:', 3 in s)
+print('len(s):', len(s))
+print('s.union({1, 5}):', s.union({1, 5}))
+print('s.intersection({6, 5, 4, 3}):', s.intersection({6, 5, 4, 3}))
+print('s.isdisjoint(s2):', s.isdisjoint(s2))
+print('s3.issubset(s):', s3.issubset(s))
+print('s.issuperset(s3):', s.issuperset(s3))
+s.update(s2)
+print('s.update(s2), s:', s)
+s.add(7)
+print('s.add(7), s:', s)
+s.remove(1)  # not find, KeyError
+print('s.remove({1, 2}), s:', s)
+s.discard(10)  # not find: OK
+print('s.discard(10), s:', s)
+print('s.pop():', s.pop())
+print('s.pop():', s.pop())
+print('s.pop():', s.pop())
+print('s.pop():', s.pop())
+print('s.pop():', s.pop())
+print('s:', s)
+s.clear()
+print('s.clear(), s:', s)
+
+
+def empty(s):
+    return s is Link.empty
+
+
+def set_contains(s, v):
+    """Return True if and only if set s contains v."""
+    if empty(s):
+        return False
+    elif s.first == v:
+        return True
+    else:
+        return set_contains(s.rest, v)
+
+
+s = Link(4, Link(1, Link(5)))
+print('set_contains(s, 4):', set_contains(s, 4))
+
+
+def adjoin_set(s, v):
+    """Return a set containing all elements of s and element v."""
+    if set_contains(s, v):
+        return s
+    else:
+        return Link(v, s)
+
+
+print('s:', s)
+t = adjoin_set(s, 2)
+print('t = adjoin_set(s, 2), t:', t)
+
+
+def intersect_set(set1, set2):
+    """Return a set containing all elements common to set1 and set2."""
+    return filter_link(lambda v: set_contains(set2, v), set1)
+
+
+print('intersect_set(t, s):', intersect_set(t, s))
+
+
+def union_set(set1, set2):
+    set1_not_set2 = filter_link(lambda v: not set_contains(set2, v), set1)
+    return extend_link(set1_not_set2, set2)
+
+
+print('union_set(s, t):', union_set(s, t))
+
+
+# if the set is ordered, we can improve as below:
+def set_contains_improve(s, v):
+    if empty(s) or s.first > v:
+        return False
+    elif s.first == v:
+        return True
+    else:
+        return set_contains_improve(s.rest, v)
+
+
+def intersect_set_improve(set1, set2):
+    if empty(set1) or empty(set2):
         return Link.empty
     else:
-        using_m = partitions(n - m, m)
-        with_m = map_link(lambda s: Link(m, s), using_m)
-        without_m = partitions(n, m - 1)
-        return with_m + without_m
-
-def print_partitions(n, m):
-    lists = partitions(n, m)
-    strings = map_link(lambda s: join_link(s, ' + '), lists)
-    print(join_link(strings, '\n'))
+        e1, e2 = set1.first, set2.first
+        if e1 == e2:
+            return Link(e1, intersect_set_improve(set1.rest, set2.rest))
+        elif e1 < e2:
+            return intersect_set_improve(set1.rest, set2)
+        elif e2 < e1:
+            return intersect_set_improve(set1, set2.rest)
 
 
-print_partitions(6, 4)
+
