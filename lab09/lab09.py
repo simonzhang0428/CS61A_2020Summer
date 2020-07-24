@@ -48,6 +48,7 @@ def every_other(s):
     return every_other(s.rest)
 
 
+# Tree
 def label_squarer(t):
     """Mutates a Tree t by squaring all its elements.
 
@@ -57,6 +58,7 @@ def label_squarer(t):
     Tree(1, [Tree(9, [Tree(25)]), Tree(49)])
     """
     "*** YOUR CODE HERE ***"
+    t.map(lambda x: x * x)
 
 
 def cumulative_mul(t):
@@ -69,6 +71,12 @@ def cumulative_mul(t):
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
     "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return
+    else:
+        for b in t.branches:
+            cumulative_mul(b)
+            t.label *= b.label
 
 
 def has_cycle(link):
