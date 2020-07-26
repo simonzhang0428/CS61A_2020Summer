@@ -2,6 +2,11 @@ def make_generators_generator(g):
     """Generates all the "sub"-generators of the generator returned by
     the generator function g.
 
+    Write the generator function make_generators_generator, which takes a zero-argument generator function g and
+    returns a generator that yields generators. For each element e yielded by the generator object returned by
+    calling g, a new generator object is yielded that will generate entries 1 through e yielded by the generator
+    returned by g.
+
     >>> def every_m_ints_to(n, m):
     ...     i = 0
     ...     while i <= n:
