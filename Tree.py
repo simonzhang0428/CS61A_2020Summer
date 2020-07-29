@@ -71,6 +71,13 @@ def height(t):
         return 1 + max([height(b) for b in t.branches])
 
 
+def prune(t, n):
+    """Remove subtrees whose label is n."""
+    t.branches = [b for b in t.branches if b.label != n]
+    for b in t.branches:
+        prune(b, n)
+
+
 # Tree ADT using function and selector
 def tree(label, branches=[]):
     """Construct a tree with the given label value and a list of branches."""

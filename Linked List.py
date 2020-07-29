@@ -65,6 +65,21 @@ def join_link(s, separator):
         return str(s.first) + separator + join_link(s.rest, separator)
 
 
+def add(s, v):
+    """
+    Add v to an ordered list s with no repeats, returning modified s.
+    If v is already in s, then don't modify s, but still return it.
+    """
+    assert s is not Link.empty
+    if s.first > v:
+        s.first, s.rest = v, Link(s.first, s.rest)
+    elif s.first < v and s.rest is Link.empty:
+        s.rest = Link(v)
+    elif s.first < v:
+        add(s.rest, v)
+    return s
+
+
 # Linked list ADT
 empty = 'empty'
 
