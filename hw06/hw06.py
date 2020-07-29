@@ -1,4 +1,3 @@
-
 passphrase = '*** PASSPHRASE HERE ***'
 
 
@@ -50,6 +49,7 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
+
     def __init__(self, name, price):
         self.name = name
         self.price = price
@@ -63,12 +63,11 @@ class VendingMachine:
             return f'You must add ${self.price - self.balance} more funds.'
         else:
             change = self.balance - self.price
+            self.inventory -= 1
+            self.balance = 0
             if change == 0:
-                self.inventory -= 1
                 return f'Here is your {self.name}.'
             else:
-                self.inventory -= 1
-                self.balance = 0
                 return f'Here is your {self.name} and ${change} change.'
 
     def add_funds(self, funds):
@@ -80,6 +79,7 @@ class VendingMachine:
     def restock(self, inventory):
         self.inventory += inventory
         return f'Current {self.name} stock: {self.inventory}'
+
 
 class Mint:
     """A mint creates coins by stamping on years.
@@ -117,9 +117,12 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = Mint.current_year
+
 
 class Coin:
     def __init__(self, year):
@@ -127,9 +130,15 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        diff = Mint.current_year - self.year
+        if diff > 50:
+            return self.cents + (diff - 50)
+        return self.cents
+
 
 class Nickel(Coin):
     cents = 5
+
 
 class Dime(Coin):
     cents = 10
@@ -162,6 +171,37 @@ def is_bst(t):
     """
     "*** YOUR CODE HERE ***"
 
+    #     Each node has at most two children (a leaf is automatically a valid binary search tree)
+    #     The children are valid binary search trees
+    #     For every node, the entries in that node's left child are less than or equal to the label of the node
+    #     For every node, the entries in that node's right child are greater than the label of the node
+
+    def bst_max(t):
+        """Return the max value in a BST."""
+        if t.is_leaf():
+            return t.label
+        else:
+            return max(bst_max(t.branches[-1]), t.label)
+
+    def bst_min(t):
+        """Return the min value in a BST."""
+        if t.is_leaf():
+            return t.label
+        else:
+            return min(bst_min(t.branches[0]), t.label)
+
+    if t.is_leaf():
+        return True
+    elif len(t.branches) == 1:
+        c = t.branches[0]
+        return is_bst(c) and (bst_max(c) <= t.label or bst_min(c) > t.label)
+    elif len(t.branches) == 2:
+        c1, c2 = t.branches
+        valid_branches = is_bst(c1) and is_bst(c2)
+        return valid_branches and bst_max(c1) <= t.label <= bst_min(c2)
+    else:
+        return False
+
 
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
@@ -179,6 +219,11 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    result = Link.empty
+    while n > 0:
+        result = Link(n % 10, result)
+        n //= 10
+    return result
 
 
 def path_yielder(t, value):
@@ -217,14 +262,16 @@ def path_yielder(t, value):
     """
 
     "*** YOUR CODE HERE ***"
+    if t.label == value:
+        yield [value]
 
-    for _______________ in _________________:
-        for _______________ in _________________:
-
+    for b in t.branches:
+        for path in path_yielder(b, value):
             "*** YOUR CODE HERE ***"
+            yield [t.label] + path
 
 
-def remove_all(link , value):
+def remove_all(link, value):
     """Remove all the nodes containing value in link. Assume that the
     first element is never removed.
 
@@ -242,6 +289,20 @@ def remove_all(link , value):
     <0 1>
     """
     "*** YOUR CODE HERE ***"
+    while link.rest is not Link.empty:
+        if link.rest.first == value:
+            link.rest = link.rest.rest
+        else:
+            link = link.rest
+
+    # recursive solution
+    # if link is Link.empty or link.rest is Link.empty:
+    #     return
+    # if link.rest.first == value:
+    #     link.rest = link.rest.rest
+    #     remove_all(link, value)
+    # else:
+    #     remove_all(link.rest, value)
 
 
 def deep_map(f, link):
@@ -258,6 +319,13 @@ def deep_map(f, link):
     <<2 <4 6> 8> <<10>>>
     """
     "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return link
+    if isinstance(link.first, Link):
+        first = deep_map(f, link.first)
+    else:
+        first = f(link.first)
+    return Link(first, deep_map(f, link.rest))
 
 
 class Tree:
@@ -270,6 +338,7 @@ class Tree:
     >>> t.branches[1].is_leaf()
     True
     """
+
     def __init__(self, label, branches=[]):
         for b in branches:
             assert isinstance(b, Tree)
@@ -332,6 +401,7 @@ class Tree:
             for b in t.branches:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
+
         return print_tree(self).rstrip()
 
 
@@ -375,4 +445,3 @@ class Link:
             string += str(self.first) + ' '
             self = self.rest
         return string + str(self.first) + '>'
-
