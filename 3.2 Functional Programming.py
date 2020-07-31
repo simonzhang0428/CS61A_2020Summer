@@ -84,8 +84,17 @@
 
 # list
 # cons: Two-argument procedure that creates a linked list
+# Cons. The primitive procedure cons means "construct."
+
 # car:  return the first element of a list
+# refers to the "Contents of Address part of Register"
+
 # cdr:  return the rest of a list
+# cdr refers to the phrase "Contents of Decrement part of Register."
+
+# cadr = second item
+# cadr:  "contents of address part of contents of decrement part of register".
+
 # nil:  the empty list
 # scm> (list 1 2 3 4)
 # (1 2 3 4)
