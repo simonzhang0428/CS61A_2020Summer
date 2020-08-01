@@ -1,0 +1,66 @@
+• and takes in any amount of operands and evaluates these operands from left to right until one evaluates to a false-y value.
+It returns that first false-y value. If there are no false-y values, it returns the value of the last expression
+(or #t if there are no operands)
+
+• or also evaluates any number of operands from left to right until one evaluates to a truth-y value.
+It returns that first truth-y value. If there are no truth- y values, it returns the value of the last expression
+(or #f if there are no operands)
+
+• not takes in a single operand, evaluates it, and returns its opposite truthiness value.
+Note that not is a regular procedure and not a special form.
+
+
+• The list procedure takes in an arbitrary amount of arguments. Because it is a procedure, all operands are evaluated when list is called. A list is constructed with the values of these operands and is returned.
+• The quote special form takes in a single operand. It returns this operand exactly as is, without evaluating it. Note that this special form can be used to return any value, not just a list.
+• Similarly, a quasiquote, denoted with a backtick symbol, returns an expression without evaluating it. However, parts of that expression can be unquoted, denoted using a comma, and those unquoted parts are evaluated.
+
+scm> (define x 2) scm> (define y 3) scm> (list 1 x 3) (1 2 3)
+scm> (quote (1 x 3)) (1 x 3)
+scm> '(1 x 3)
+(1 x 3)
+scm> '(+ x y)
+(+ x y)
+scm> `(+ x y)
+(+ x y)
+scm> `(+ ,x y) ; Unquoted with a comma
+(+ 2 y)
+scm> `(+ ,x ,y)
+(+ 2 3)
+scm> (eval `(+ ,x ,y)) ; The eval function evaluates the operands
+
+=, eq?, equal?
+• = can only be used for comparing numbers.
+• eq? behaves like == in Python for comparing two non-pairs (numbers, booleans,
+etc.). Otherwise, eq? behaves like is in Python.
+• equal? compares pairs by determining if their cars are equal? and their cdrs are equal?
+(that is, they have the same contents). Otherwise, equal? behaves like eq?.
+
+scm> (define a '(1 2 3)) a
+scm> (= a a)
+Error
+scm> (equal? a '(1 2 3))
+#t
+scm> (eq? a '(1 2 3))
+#f
+scm> (define b a) b
+scm> (eq? a b)
+#t
+
+(define (my-append a b)
+	(if (null? a)
+	b
+	(cons (car a) (my-append (cdr a) b)))
+)
+scm> (my-append '(1 2 3) '(2 3 4)) (1 2 3 2 3 4)
+
+(define (insert element lst index)
+	(if (= index 0)
+	(cons element lst)
+	(cons (car lst) (insert element (cdr lst) (- index 1))))
+)
+
+(define (duplicate lst)
+	(if (null? lst)
+		lst
+	    (cons (car lst) (cons (car lst) (duplicate (cdr lst)))))
+)
